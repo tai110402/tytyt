@@ -1,0 +1,143 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+public class PlayerWeaponManagement : MonoBehaviour
+{
+    //References
+    [Header("References")]
+    [SerializeField] private PlayerSword _playerSword;
+    [SerializeField] private PlayerAxe _playerAxe;
+    [SerializeField] private PlayerShield _playerShield;
+    [SerializeField] private float _timeWaitForCalculateNumberOfClicks = 0.2f;
+
+    private PlayerInputActions _playerInputActions;
+    private bool _isUnequip;
+    private bool _isSwordEquip;
+    private bool _isAxeEquip;
+
+    private float _timeNormalClicked;
+    private int _numberOfClicks;
+
+    private void Awake()
+    {
+        _playerInputActions = new PlayerInputActions();
+        _playerInputActions.AttackManagement.Enable();
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        _playerInputActions.AttackManagement.NormalSkill.started += OnNormalSkillStart;
+        _playerInputActions.AttackManagement.FirstSkill.started += OnFirstSkillStart;
+        _playerInputActions.AttackManagement.SecondSkill.started += OnSecondSkillStart;
+        _playerInputActions.AttackManagement.ThirdSkill.started += OnThirdSkillStart;
+        _playerInputActions.AttackManagement.BlockSkill.started += OnBlockSkillStart;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            _isUnequip = true;
+            _isAxeEquip = false;
+            _isSwordEquip = false;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            _isUnequip = false;
+            _isAxeEquip = true;
+            _isSwordEquip = false;
+            _playerAxe.SetAnimatorLayer();
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            _isUnequip = false;
+            _isAxeEquip = false;
+            _isSwordEquip = true;
+            _playerSword.SetAnimatorLayer();
+        }
+    }
+
+    private void OnNormalSkillStart(InputAction.CallbackContext context)
+    {
+        if (_timeNormalClicked + 0.2f > Time.time)
+        {
+            _numberOfClicks += 1;
+        }
+        else
+        {
+            _numberOfClicks = 1;
+            _timeNormalClicked = Time.time;
+        }
+
+        if (_isAxeEquip)
+        {
+
+        }
+        else if (_isSwordEquip)
+        {
+            if (_numberOfClicks == 1)
+            {
+                Invoke(nameof(WaitForCalculateNumberOfClicks), _timeWaitForCalculateNumberOfClicks);
+            }
+            else if (_numberOfClicks == 2)
+            {
+                CancelInvoke(nameof(WaitForCalculateNumberOfClicks));
+                _playerSword.SecondSkillStartTime = _playerSword.Attack(_playerSword.SecondNormalSkill, _playerSword.SecondNormalSkillStartTime);
+            }
+        }
+    }
+
+    private void WaitForCalculateNumberOfClicks()
+    {
+        _playerSword.FirstNormalSkillStartTime = _playerSword.Attack(_playerSword.FirstNormalSkill, _playerSword.FirstNormalSkillStartTime);
+
+    }
+
+    private void OnFirstSkillStart(InputAction.CallbackContext context)
+    {
+        if (_isAxeEquip)
+        {
+
+        } 
+        else if (_isSwordEquip)
+        {
+            //_playerSword.FirstSkill();
+            _playerSword.FirstSkillStartTime = _playerSword.Attack(_playerSword.FirstSkill, _playerSword.FirstSkillStartTime);
+        }
+    }
+
+    private void OnSecondSkillStart(InputAction.CallbackContext context)
+    {
+        if (_isAxeEquip)
+        {
+
+        }
+        else if (_isSwordEquip)
+        {
+            //_playerSword.FirstSkill();
+            _playerSword.SecondSkillStartTime = _playerSword.Attack(_playerSword.SecondSkill, _playerSword.SecondSkillStartTime);
+        }
+    }
+
+    private void OnThirdSkillStart(InputAction.CallbackContext context)
+    {
+        if (_isAxeEquip)
+        {
+
+        }
+        else if (_isSwordEquip)
+        {
+            //_playerSword.FirstSkill();
+            _playerSword.ThirdSkillStartTime = _playerSword.Attack(_playerSword.ThirdSkill, _playerSword.ThirdSkillStartTime);
+        }
+    }
+
+    private void OnBlockSkillStart(InputAction.CallbackContext context)
+    {
+        _playerShield.BlockSkillStartTime = _playerShield.Block(_playerShield.BlockSkill, _playerShield.BlockSkillStartTime);
+    }
+}
