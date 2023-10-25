@@ -75,25 +75,39 @@ public class PlayerWeaponManagement : MonoBehaviour
 
         if (_isAxeEquip)
         {
-
+            if (_numberOfClicks == 1)
+            {
+                Invoke(nameof(WaitForCalculateNumberOfClicksForAxe), _timeWaitForCalculateNumberOfClicks);
+            }
+            else if (_numberOfClicks == 2)
+            {
+                CancelInvoke(nameof(WaitForCalculateNumberOfClicksForAxe));
+                _playerAxe.SecondSkillStartTime = _playerAxe.Attack(_playerAxe.SecondNormalSkill, _playerAxe.SecondNormalSkillStartTime);
+            }
         }
         else if (_isSwordEquip)
         {
             if (_numberOfClicks == 1)
             {
-                Invoke(nameof(WaitForCalculateNumberOfClicks), _timeWaitForCalculateNumberOfClicks);
+                Invoke(nameof(WaitForCalculateNumberOfClicksForSword), _timeWaitForCalculateNumberOfClicks);
             }
             else if (_numberOfClicks == 2)
             {
-                CancelInvoke(nameof(WaitForCalculateNumberOfClicks));
+                CancelInvoke(nameof(WaitForCalculateNumberOfClicksForSword));
                 _playerSword.SecondSkillStartTime = _playerSword.Attack(_playerSword.SecondNormalSkill, _playerSword.SecondNormalSkillStartTime);
             }
         }
     }
 
-    private void WaitForCalculateNumberOfClicks()
+    private void WaitForCalculateNumberOfClicksForSword()
     {
         _playerSword.FirstNormalSkillStartTime = _playerSword.Attack(_playerSword.FirstNormalSkill, _playerSword.FirstNormalSkillStartTime);
+
+    }
+
+    private void WaitForCalculateNumberOfClicksForAxe()
+    {
+        _playerAxe.FirstNormalSkillStartTime = _playerAxe.Attack(_playerAxe.FirstNormalSkill, _playerAxe.FirstNormalSkillStartTime);
 
     }
 
@@ -101,7 +115,7 @@ public class PlayerWeaponManagement : MonoBehaviour
     {
         if (_isAxeEquip)
         {
-
+            _playerAxe.FirstSkillStartTime = _playerAxe.Attack(_playerAxe.FirstSkill, _playerAxe.FirstSkillStartTime);
         } 
         else if (_isSwordEquip)
         {
@@ -114,7 +128,7 @@ public class PlayerWeaponManagement : MonoBehaviour
     {
         if (_isAxeEquip)
         {
-
+            _playerAxe.SecondSkillStartTime = _playerAxe.Attack(_playerAxe.SecondSkill, _playerAxe.SecondSkillStartTime);
         }
         else if (_isSwordEquip)
         {
@@ -127,7 +141,7 @@ public class PlayerWeaponManagement : MonoBehaviour
     {
         if (_isAxeEquip)
         {
-
+            _playerAxe.ThirdSkillStartTime = _playerAxe.Attack(_playerAxe.ThirdSkill, _playerAxe.ThirdSkillStartTime);
         }
         else if (_isSwordEquip)
         {

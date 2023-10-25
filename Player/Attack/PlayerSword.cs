@@ -4,21 +4,9 @@ using UnityEngine;
 
 public class PlayerSword : MonoBehaviour, IPlayerWeapon
 {
-    [SerializeField] private int _indexOfSwordAnimatorLayer = 1;
+    [SerializeField] private int _indexOfSwordAnimatorLayer = 2;
 
     private Animator _playerAnimator;
-
-    private bool _isFirstNormalSkillPressed;
-    private bool _isSecondNormalSkillPressed;
-    private bool _isFirstSkillPressed;
-    private bool _isSecondSkillPressed;
-    private bool _isThirdSkillPressed;
-
-    private string _firstSkillUsing;
-    private string _secondSkillUsing;
-    private string _thirdSkillUsing;
-    private string _firstNormalSkillUsing = "First Normal Sword Skill";
-    private string _secondNormalSkillUsing = "Second Normal Sword Skill";
 
     private Skill _firstNormalSkill;
     private Skill _secondNormalSkill;
@@ -48,12 +36,6 @@ public class PlayerSword : MonoBehaviour, IPlayerWeapon
     private void Awake()
     {
         _playerAnimator = GetComponent<Animator>();    
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-
     }
 
     // Update is called once per frame
